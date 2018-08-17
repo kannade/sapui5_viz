@@ -11,8 +11,13 @@ sap.ui.define([
 	return Controller.extend("nickcode.ru_viz.controller.Main", {
 
 		onInit: function () {
+			//получим компонент
 			var oComp = this.getOwnerComponent();
+
+			//получим модель
 			var oMdl = oComp.getModel("graphDataMdl");
+
+			//как получить содержимое модели, когда она определена через manifest
 			oMdl.attachRequestCompleted(function () {
 				console.log(oMdl.getData());
 			});
@@ -66,8 +71,8 @@ sap.ui.define([
 					}
 				},
 				title: {
-					visible: false,
-					text: 'Фактические выплаты за 12 мес.'
+					visible: true,
+					text: 'Стоимость молока.'
 				},
 				tooltip: {
 					visible: true,
@@ -86,6 +91,21 @@ sap.ui.define([
 						var oNumFormat = sap.ui.core.format.NumberFormat.getFloatInstance(oType);
 						var amount = oNumFormat.format(parseInt(amt, 10));
 						tooltipDomNode.selectAll('.v-body-measure-value').html(amount);
+
+						var message = "milk";
+						tooltipDomNode.append('div').text(message).style({
+							'font-family': 'Arial',
+							'font-size': '13px',
+							'font-weight': 'bold',
+							'white-space': 'normal',
+							'text-overflow': 'ellipsis',
+							'overflow': 'hidden',
+							'padding-left': '0px',
+							'padding-top': '6px',
+							'color': '#000',
+							'max-width': '10rem'
+						});
+
 						//tooltipDomNode.selectAll('.v-body-measure-value').attr('style', 'color: red;');
 
 					}
@@ -94,16 +114,18 @@ sap.ui.define([
 					syncValueAxis: false,
 					behaviorType: true,
 					selectability: {
-						//	mode: 'exclusive'
-						mode: 'none'
+							mode: 'exclusive'
+						//mode: 'none'
 					}
 				}
 			});
 
 			oVizFrame.setModel(oMdl);
 
+			//Динамически добавим графики и цвета
 			var aValuesFeed = [];
 			var aColorPalette = [];
+
 			aValuesFeed.push("Revenue");
 			aColorPalette.push("#ff002a");
 
@@ -116,25 +138,30 @@ sap.ui.define([
 				'values': aValuesFeed
 			});
 
+			//добавляем оси
 			oVizFrame.addFeed(feed);
 
+			//добавляем цвета для осей
 			oVizFrame.setVizProperties({
 				plotArea: {
 					colorPalette: aColorPalette
 				}
 			});
 
+			//Всплывающее окошко по нажатию на элемент графика
 			// var oPopOver = this.getView().byId("idPopOver");
 			// oPopOver.connect(oVizFrame.getVizUid());
 			// oPopOver.setFormatString(formatPattern.STANDARDFLOAT);
 
-			sap.viz.api.env.globalSettings({
-				disableTooltipTimer: true
-			});
-
+			//Всплывающее окошко при наведении мышки на элемент графика
 			var oTooltip = new sap.viz.ui5.controls.VizTooltip({});
 			oTooltip.connect(oVizFrame.getVizUid());
 			oTooltip.setFormatString(formatPattern.STANDARDFLOAT);
+
+			//Уберем задержку перед появлением тултипа:
+			sap.viz.api.env.globalSettings({
+				disableTooltipTimer: true
+			});
 
 			InitPageUtil.initPageSettings(this.getView());
 
