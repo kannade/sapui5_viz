@@ -77,6 +77,12 @@ sap.ui.define([
 				tooltip: {
 					visible: true,
 					applyTimeAxisFormat: true,
+					preRender: function (tooltipDomNode) {
+						//Called before render tooltip.
+						// tooltipDomNode.append('div').text('nickcode.ru').style({
+						// 	'font-weight': 'bold'
+						// });
+					},
 					postRender: function (tooltipDomNode) {
 						//Called after tooltip is renderred. 
 						var oType = new sap.ui.model.type.Integer({
@@ -114,8 +120,8 @@ sap.ui.define([
 					syncValueAxis: false,
 					behaviorType: true,
 					selectability: {
-							mode: 'exclusive'
-						//mode: 'none'
+						mode: 'exclusive'
+							//mode: 'none'
 					}
 				}
 			});
