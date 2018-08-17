@@ -1,9 +1,34 @@
-<mvc:View controllerName="nickcode.ru_viz.controller.Main" xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+<mvc:View controllerName="nickcode.ru_viz.controller.Main" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:layout="sap.ui.layout" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+	xmlns:viz.data="sap.viz.ui5.data" displayBlock="true" xmlns="sap.m">
 	<App id="idAppControl">
 		<pages>
 			<Page title="{i18n>title}">
-				<content></content>
+				<content>
+					<layout:FixFlex id='chartFixFlex' minFlexSize="250" class="graphFixFlex">
+						<layout:flexContent class="graphFlexContent">
+							<viz:Popover id="idPopOver"></viz:Popover>
+							<viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" height='100%' width="100%" vizType='stacked_column' class="graphPpl"
+								legendVisible="false">
+								<viz:dataset>
+									<viz.data:FlattenedDataset data="{/milk}">
+										<viz.data:dimensions>
+											<viz.data:DimensionDefinition name="Период" value="{Date}"/>
+										</viz.data:dimensions>
+										<viz.data:measures>
+											<viz.data:MeasureDefinition name="Revenue" value="{Revenue}"/>
+											<viz.data:MeasureDefinition name="Cost" value="{Cost}"/>
+										</viz.data:measures>
+									</viz.data:FlattenedDataset>
+								</viz:dataset>
+								<viz:feeds>
+									<!--<viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Revenue,Cost"/>-->
+									<viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Период"/>
+								</viz:feeds>
+							</viz:VizFrame>
+						</layout:flexContent>
+					</layout:FixFlex>
+				</content>
 			</Page>
 		</pages>
 	</App>
