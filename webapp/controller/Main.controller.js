@@ -78,13 +78,15 @@ sap.ui.define([
 					visible: true,
 					applyTimeAxisFormat: true,
 					preRender: function (tooltipDomNode) {
-						//Called before render tooltip.
+						// Вызывается перед всплывающей подсказкой.
 						// tooltipDomNode.append('div').text('nickcode.ru').style({
 						// 	'font-weight': 'bold'
 						// });
 					},
 					postRender: function (tooltipDomNode) {
-						//Called after tooltip is renderred. 
+						//Вызывается после всплывающей подсказки. 
+
+						//Определим тип переменной со свойствами группировки 
 						var oType = new sap.ui.model.type.Integer({
 							//	maxFractionDigits: 0,
 							groupingEnabled: true,
@@ -92,12 +94,31 @@ sap.ui.define([
 								//	decimalSeparator: "."
 						});
 
+						//Получим содержимое дива с классом v-body-measure-value
 						var rev = tooltipDomNode.selectAll('.v-body-measure-value').text();
 						var amt = Number(rev);
+
+						//Применим формат для числа
 						var oNumFormat = sap.ui.core.format.NumberFormat.getFloatInstance(oType);
 						var amount = oNumFormat.format(parseInt(amt, 10));
-						tooltipDomNode.selectAll('.v-body-measure-value').html(amount);
 
+						//Определим тип "Цена" со свойствами
+						var oCurrency = new sap.ui.model.type.Currency({
+							showMeasure: true,
+							maxFractionDigits: 0,
+							minFractionDigits: 0,
+							groupingEnabled: true,
+							groupingSeparator: ' '
+						});
+
+						//применим тип "Цена" для содержимого дива
+						var money = oCurrency.formatValue([amt, "₽"], "string");
+
+						//Вставим значение в div
+						//tooltipDomNode.selectAll('.v-body-measure-value').html(amount);
+						tooltipDomNode.selectAll('.v-body-measure-value').html(money);
+
+//Напишем во всплывающем сообщении слово milk и применим к нему css стиль
 						var message = "milk";
 						tooltipDomNode.append('div').text(message).style({
 							'font-family': 'Arial',
